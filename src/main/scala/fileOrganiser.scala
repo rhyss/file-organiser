@@ -6,7 +6,9 @@ import java.nio.file.{Files, Path, StandardCopyOption}
 object fileOrganiser {
   def main(args: Array[String]): Unit = {
 
-    val sourceDir = new File("/Users/rhys/Dropbox/Camera Uploads/")
+    val sourceDir = new File(args(0))
+    val batchSize: Int = args(1).toInt
+
     val dateRegex = """(\d\d\d\d)-(\d\d)-(\d\d)""".r
     val files = if (sourceDir.exists && sourceDir.isDirectory) {
       sourceDir.listFiles.filter(_.isFile).toList
@@ -21,7 +23,7 @@ object fileOrganiser {
     fileMap.map{
       case (k, v) =>
         (s"${sourceDir.getAbsolutePath}/${k.substring(0, 4)}/$k", v)
-    }.take(1).foreach{
+    }.take(batchSize).foreach{
       case (targetDir, files) =>
         new File(targetDir).mkdirs()
         files.foreach {
